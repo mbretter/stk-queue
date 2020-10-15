@@ -1,0 +1,7 @@
+!vendor/
+vendor/*
+.idea
+tmp/*/*
+reports
+.php_cs.cache
+.phpunit.result.cache
