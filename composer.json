@@ -1,8 +1,8 @@
 {
   "name": "mbretter/stk-queue",
   "type": "library",
-  "description": "Stk easy message queueing with mongodb",
-  "keywords": ["stk","message queue", "mongodb"],
+  "description": "Stk dead simple message queueing with mongodb",
+  "keywords": ["stk","messagequeue", "mongodb"],
   "homepage": "https://www.bretterklieber.com",
   "license": "BSD-3-Clause",
   "require": {
