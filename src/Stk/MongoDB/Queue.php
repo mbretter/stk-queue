@@ -108,14 +108,20 @@ class Queue implements Injectable
         ]);
     }
 
-    public function selfcare()
+    public function selfcare(string $topic = null)
     {
         // re-schedule long running tasks
         // this only happens if the processor could not ack the task, i.e. the application crashed
-        $this->collection->updateMany([
+        $query = [
             'state'           => 'running',
             'meta.dispatched' => ['$lt' => new UTCDateTime((time() + self::DEFAULT_TIMEOUT) * 1000)]
-        ], [
+        ];
+
+        if ($topic !== null) {
+            $query['topic'] = $topic;
+        }
+
+        $this->collection->updateMany($query, [
             '$set' => [
                 'state'           => self::STATE_PENDING,
                 'meta.dispatched' => null,
@@ -123,10 +129,16 @@ class Queue implements Injectable
         ]);
 
         // set tasks exceeding maxtries to error
-        $this->collection->updateMany([
+        $query = [
             'state' => self::STATE_PENDING,
             '$expr' => ['$gte' => ['$tries', '$maxtries']]
-        ], [
+        ];
+
+        if ($topic !== null) {
+            $query['topic'] = $topic;
+        }
+
+        $this->collection->updateMany($query, [
             '$set' => [
                 'state' => self::STATE_ERROR,
             ]
