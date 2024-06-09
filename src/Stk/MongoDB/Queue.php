@@ -63,7 +63,8 @@ class Queue implements Injectable
                 'document'   => 'object',
                 'array'      => 'array',
                 'fieldPaths' => [
-                    'payload' => 'array',
+                    'payload'   => 'array',
+                    'payload.$' => 'array',
                 ],
             ]
         ]);

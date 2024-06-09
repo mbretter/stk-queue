@@ -43,9 +43,9 @@ class QueueTest extends TestCase
 
     public function testGet()
     {
-        $payload = ['subject' => 'Welcome', 'body' => 'Hello'];
+        $payload = ['subject' => 'Welcome', 'body' => 'Hello', 'headers' => ['foo' => 'bar', 'aaa' => 'bbb']];
         $queue   = new Queue($this->collection);
-        $queue->add('mail.send', ['subject' => 'Welcome', 'body' => 'Hello']);
+        $queue->add('mail.send', $payload);
         $task = $queue->get('mail.send');
         $this->assertEquals($payload, $task->payload);
     }
