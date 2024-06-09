@@ -5,6 +5,7 @@ namespace Stk\MongoDB;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Operation\FindOneAndUpdate;
+use stdClass;
 use Stk\Service\Injectable;
 use MongoDB\Collection;
 
@@ -25,7 +26,7 @@ class Queue implements Injectable
         $this->collection = $collection;
     }
 
-    public function add(string $topic, array $payload = [], $maxTries = self::DEFAULT_MAXTRIES)
+    public function add(string $topic, array $payload = [], int $maxTries = self::DEFAULT_MAXTRIES): void
     {
         $this->collection->insertOne([
             'topic'    => $topic,
@@ -42,8 +43,9 @@ class Queue implements Injectable
         ]);
     }
 
-    public function get(string $topic)
+    public function get(string $topic): ?stdClass
     {
+        /** @var stdClass $task */
         $task = $this->collection->findOneAndUpdate([
             'topic' => $topic,
             'state' => self::STATE_PENDING,
@@ -84,7 +86,7 @@ class Queue implements Injectable
         return $task;
     }
 
-    public function ack(string $id)
+    public function ack(string $id): void
     {
         $this->collection->updateOne([
             '_id' => new ObjectId($id),
@@ -96,7 +98,7 @@ class Queue implements Injectable
         ]);
     }
 
-    public function err(string $id, $message = '')
+    public function err(string $id, string $message = ''): void
     {
         $this->collection->updateOne([
             '_id' => new ObjectId($id),
@@ -109,7 +111,7 @@ class Queue implements Injectable
         ]);
     }
 
-    public function selfcare(string $topic = null)
+    public function selfcare(string $topic = null): void
     {
         // re-schedule long running tasks
         // this only happens if the processor could not ack the task, i.e. the application crashed
@@ -146,7 +148,7 @@ class Queue implements Injectable
         ]);
     }
 
-    public function createIndexes()
+    public function createIndexes(): void
     {
         $this->collection->createIndex([
             'topic' => 1,
