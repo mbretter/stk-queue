@@ -26,6 +26,12 @@ class Queue implements Injectable
         $this->collection = $collection;
     }
 
+    /**
+     * @param string $topic
+     * @param array<mixed> $payload
+     * @param int $maxTries
+     * @return void
+     */
     public function add(string $topic, array $payload = [], int $maxTries = self::DEFAULT_MAXTRIES): void
     {
         $this->collection->insertOne([
@@ -45,7 +51,7 @@ class Queue implements Injectable
 
     public function get(string $topic): ?stdClass
     {
-        /** @var stdClass $task */
+        /** @var stdClass|null $task */
         $task = $this->collection->findOneAndUpdate([
             'topic' => $topic,
             'state' => self::STATE_PENDING,

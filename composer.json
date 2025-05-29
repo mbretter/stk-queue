@@ -8,13 +8,13 @@
   "require": {
     "php": "^8",
     "ext-mongodb": "*",
-    "mongodb/mongodb": ">=1.8.0",
+    "mongodb/mongodb": "^2|~1.17",
     "mbretter/stk-di": ">=2"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
     "friendsofphp/php-cs-fixer": "^v3.58.0",
-    "phpstan/phpstan": "^1.11.2"
+    "phpstan/phpstan": "^2.1.17"
   },
   "autoload-dev": {
     "psr-4": {

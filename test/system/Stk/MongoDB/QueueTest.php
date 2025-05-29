@@ -30,7 +30,7 @@ class QueueTest extends TestCase
         $this->collection = $this->database->selectCollection('queue');
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $queue = new Queue($this->collection);
         $queue->add('mail.send', ['subject' => 'Welcome', 'body' => 'Hello']);
@@ -41,7 +41,7 @@ class QueueTest extends TestCase
         $this->assertEquals(0, $task['tries']);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $payload = ['subject' => 'Welcome', 'body' => 'Hello', 'headers' => ['foo' => 'bar', 'aaa' => 'bbb']];
         $queue   = new Queue($this->collection);
@@ -50,7 +50,7 @@ class QueueTest extends TestCase
         $this->assertEquals($payload, $task->payload);
     }
 
-    public function testAck()
+    public function testAck(): void
     {
         $queue = new Queue($this->collection);
         $queue->add('mail.send', ['subject' => 'Welcome', 'body' => 'Hello']);
@@ -61,7 +61,7 @@ class QueueTest extends TestCase
         $this->assertEquals(Queue::STATE_COMPLETED, $task['state']);
     }
 
-    public function testErr()
+    public function testErr(): void
     {
         $queue = new Queue($this->collection);
         $queue->add('mail.send', ['subject' => 'Welcome', 'body' => 'Hello']);
@@ -73,14 +73,14 @@ class QueueTest extends TestCase
         $this->assertEquals('failure', $task['message']);
     }
 
-    public function testGetNoTasks()
+    public function testGetNoTasks(): void
     {
         $queue = new Queue($this->collection);
         $task  = $queue->get('nonexistend');
         $this->assertNull($task);
     }
 
-    public function testCreateIndexes()
+    public function testCreateIndexes(): void
     {
         $queue = new Queue($this->collection);
         $queue->createIndexes();
@@ -97,7 +97,7 @@ class QueueTest extends TestCase
         $this->assertEquals(['topic' => 1, 'state' => 1], $index->getKey());
     }
 
-    public function testSelfcareMaxTries()
+    public function testSelfcareMaxTries(): void
     {
         $this->collection->insertOne([
             "topic"    => "mail.send",
@@ -118,7 +118,7 @@ class QueueTest extends TestCase
         $this->assertEquals(Queue::STATE_ERROR, $task['state']);
     }
 
-    public function testSelfcareOrphaned()
+    public function testSelfcareOrphaned(): void
     {
         $this->collection->insertOne([
             "topic"    => "mail.send",
@@ -140,7 +140,7 @@ class QueueTest extends TestCase
         $this->assertNull($task['meta']['dispatched']);
     }
 
-    public function testSelfcareNoOrphaned()
+    public function testSelfcareNoOrphaned(): void
     {
         $this->collection->insertOne([
             "topic"    => "mail.send",
